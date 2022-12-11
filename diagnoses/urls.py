@@ -6,5 +6,6 @@ urlpatterns = [
     path('diagnostico/<slug:slug>/', views.DiagnosesDetailView.as_view(), name='diagnosis-detail'),
     path('search/', views.searchDiagnoses, name="search-diagnoses"),
     path('category/domain/<slug:slug>', views.diagnosesDomainCategory, name="diagnoses-domain-category"),
-    path('category/class/<slug:slug>', views.diagnosesClassCategory, name="diagnoses-class-category")
+    path('category/class/<slug:slug>', views.diagnosesClassCategory, name="diagnoses-class-category"),
+    path('diagnoses/new', views.diagnosesCreate, name="diagnoses-create")
 ]

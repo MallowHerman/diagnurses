@@ -1,0 +1,12 @@
+{% extends 'diagnoses/layout.html'%}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>Create</h1>
+<div class="container">
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{form|crispy}}
+        <input class="btn btn-success" type="submit" value="Submit">
+    </form>
+</div>
+{% endblock content %}

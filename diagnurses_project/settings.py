@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-nzezo7n5we!#()-_95-hf!*$))#fqip(2$-f7%3vik@yej$0r(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3fb7-41-74-129-104.eu.ngrok.io', '127.0.0.1']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'diagnoses.apps.DiagnosesConfig',
+    'accounts.apps.AccountsConfig',
     'crispy_forms'
 ]
 
@@ -119,6 +120,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_REDIRECT_URL = 'diagnoses-list'
+
+LOGIN_URL = 'login'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
