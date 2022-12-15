@@ -14,7 +14,7 @@ class Domains(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name + "-")
+            self.slug = slugify(self.name)
         return super().save(*args, **kwargs)
 
 class Classes(models.Model):
@@ -29,22 +29,30 @@ class Classes(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name + "-")
+            self.slug = slugify(self.name)
         return super().save(*args, **kwargs)
 
 class Diagnoses(models.Model):
     #id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
-    title = models.CharField(max_length=1000)
+    diagnosis = models.CharField(max_length=1000)
+    diagnosis_code = models.CharField(max_length=300, null=True, blank=True)
     slug = models.CharField(max_length=1000, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
+    definition = models.TextField(null=True, blank=True)
+    defining_characteristics = models.TextField(null=True, blank=True)
+    related_factors = models.TextField(null=True, blank=True)
+    at_risk_population = models.TextField(null=True, blank=True)
+    associated_condition = models.TextField(null=True, blank=True)
+    nic = models.TextField(null=True, blank=True)
+    noc = models.TextField(null=True, blank=True)
     domain = models.ForeignKey(Domains, on_delete=models.SET_NULL, null=True, blank=True)
-    classe = models.ForeignKey(Classes(), on_delete=models.SET_NULL, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True) 
+    classe = models.ForeignKey(Classes, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    accepted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title
+        return self.diagnosis
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title + "-")
+            self.slug = slugify(self.diagnosis )
         return super().save(*args, **kwargs)

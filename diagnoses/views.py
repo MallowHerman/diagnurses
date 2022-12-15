@@ -8,23 +8,40 @@ from django.contrib.auth.decorators import login_required
 
 class DiagnosesListView(ListView):
     model: Diagnoses
-    queryset = Diagnoses.objects.all()
+    queryset = Diagnoses.objects.filter(accepted=True)
     context_object_name: 'diagnoses_list'
 
 
 
-class DiagnosesDetailView(DetailView):
-    model = Diagnoses
-    context_object_name: 'diagnosis_details'
+def DiagnosesDetailView(request, slug):
+    result = Diagnoses.objects.get(slug__icontains=slug)
+    defining_characteristics = result.defining_characteristics.split('\n')
+    related_factors = result.related_factors.split('\n')
+    at_risk_population = result.at_risk_population.split('\n')
+    associated_condition = result.associated_condition.split('\n')
+    nic = result.nic.split('\n')
+    noc = result.noc.split('\n')
+    
+    context = {
+        'result': result,
+        'defining_characteristics': defining_characteristics,
+        'related_factors': related_factors,
+        'at_risk_population': at_risk_population,
+        'associated_condition': associated_condition,
+        'nic': nic,
+        'noc': noc
+
+    }
+    return render(request, 'diagnoses/diagnoses_detail.html', context)
 
 def searchDiagnoses(request):
-    if request.method == 'POST':
-        search = request.POST['search-diagnoses']
-        diagnoses_searched = Diagnoses.objects.filter(title__icontains=search)
-
+    if 'q' in request.GET:
+        search_query = request.GET['q']
+        result = Diagnoses.objects.filter(diagnosis__icontains=search_query)
+        
         context = {
-            'search': search,
-            'diagnoses': diagnoses_searched
+            'search_query': search_query,
+            'result': result
         }
         return render(request, 'diagnoses/diagnoses_search.html', context)
 
@@ -70,3 +87,14 @@ def diagnosesCreate(request):
     }
 
     return render(request, 'diagnoses/diagnoses_create.html', context)
+
+def diagnosesPending(request):
+    result = Diagnoses.objects.filter(accepted=False)
+
+    if 'cancel' in request.POST:
+        print('Cancel')
+
+    context = {
+        'result': result
+    }
+    return render(request, 'diagnoses/diagnoses_pending.html', context)

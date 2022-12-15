@@ -5,4 +5,4 @@ class DiagnosesForm(ModelForm):
     class Meta:
         model = Diagnoses
         fields = '__all__'
-        exclude = ['slug']
+        exclude = ['slug', 'accepted']
