@@ -16,7 +16,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -26,13 +25,13 @@ SECRET_KEY = 'django-insecure-nzezo7n5we!#()-_95-hf!*$))#fqip(2$-f7%3vik@yej$0r(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['91eb-165-90-98-236.eu.ngrok.io', '127.0.0.1']
+ALLOWED_HOSTS = ['015b-165-90-98-236.eu.ngrok.io', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
+    #'jazzmin',
     'fontawesomefree',
     'django.contrib.admin',
     'django.contrib.auth',

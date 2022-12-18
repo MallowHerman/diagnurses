@@ -1,0 +1,17 @@
+{% extends 'diagnoses/layout.html'%}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <div style="max-width: 720px; margin-left: auto; margin-right:auto; margin-top: 20px;">
+        <h1>Edit diagnosis</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+        <div class="my-4 d-flex justify-content-end" style="gap: 10px;">
+            <a class="btn btn-secundary" href="{% url 'diagnoses-list' %}">Cancel</a>
+            <input class="btn btn-success" type="submit" value="Submit">
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

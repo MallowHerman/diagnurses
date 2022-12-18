@@ -9,10 +9,13 @@
             <li>Código do diagnóstico: <strong>{{result.diagnosis_code}}</strong></li>
             <li>Diagnóstico: <strong>{{result.diagnosis}}</strong></li>
         </ul>
-        <blockquote class="p-2" style="background-color: #fdfdfd; color: rgba(51,51,51,0.65); border: 1px solid #eee; border-left: 4px solid rgba(0,0,0,0.1);">
-            <p>{{result.definition}}</p>
-        </blockquote>
-        {% if defining_characteristics|length > 1 %}
+        <div>
+            <h1 style="font-size: 24px;">Definição do diagnóstico de enfermagem</h1>
+            <blockquote class="p-2" style="background-color: #fdfdfd; color: rgba(51,51,51,0.65); border: 1px solid #eee; border-left: 4px solid rgba(0,0,0,0.1);">
+                <p>{{result.definition}}</p>
+            </blockquote>
+        </div>
+        
         <div>
             <h1 style="font-size: 24px;">Caraterísticas Definidoras</h1>
             <ul style="font-size: 16px;">
@@ -20,10 +23,9 @@
                         <li>{{item}}</li>
                 {% endfor %}
             </ul>
-            {{defining_characteristics|length}}
+            
         </div>
-        {% endif %}
-        {% if related_factors|length > 0 %}
+    
         <div>
             <h1 style="font-size: 24px;">Fatores Relacionados</h1>
             <ul>
@@ -32,7 +34,7 @@
                 {% endfor %}
             </ul>
         </div>
-        {% endif %}
+    
         <div>
             <h1 style="font-size: 24px;">Populações em risco</h1>
             <ul>
@@ -65,15 +67,14 @@
                 {% endfor %}  
             </ul>
         </div>
+
+        {% if request.user.is_staff %}
+        <div class="d-flex border-top py-4 justify-content-end" style="gap: 5px;">
+            <a class="btn btn-danger" href="{% url 'diagnoses-edit' result.id %}">Editar</a>
+            <a class="btn btn-danger" href="{% url 'diagnoses-delete' result.id %}">Delete</a>
+            <a class="btn btn-success" href="{% url 'diagnoses-approved' result.id %}">Accept</a>        
+        </div>
+        {% endif %}
     </div>
-    {% if request.user.is_staff %}
-    <div>
-        <form action="" method="POST">
-            {%csrf_token%}
-            <input class="btn btn-danger" type="submit" name="delete" value="Delete">
-            <input class="btn btn-success" type="submit" value="Accept">
-        </form>
-    </div>
-    {% endif %}
 </div>
 {% endblock%}

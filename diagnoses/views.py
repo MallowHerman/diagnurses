@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 class DiagnosesListView(ListView):
     model: Diagnoses
-    queryset = Diagnoses.objects.filter(accepted=True)
+    queryset = Diagnoses.objects.filter(accepted="Approved")
     context_object_name: 'diagnoses_list'
 
 
@@ -37,7 +37,7 @@ def DiagnosesDetailView(request, slug):
 def searchDiagnoses(request):
     if 'q' in request.GET:
         search_query = request.GET['q']
-        result = Diagnoses.objects.filter(diagnosis__icontains=search_query)
+        result = Diagnoses.objects.filter(diagnosis__icontains=search_query, accepted="Approved")
         
         context = {
             'search_query': search_query,
@@ -47,7 +47,7 @@ def searchDiagnoses(request):
 
 def diagnosesDomainCategory(request, slug):
     if request.method == 'GET':
-        diagnoses_list = Diagnoses.objects.all().filter(domain__slug__icontains=slug)
+        diagnoses_list = Diagnoses.objects.all().filter(domain__slug__icontains=slug, accepted="Approved")
         diagnosis_first_one = diagnoses_list[0]
 
         context = {
@@ -58,7 +58,7 @@ def diagnosesDomainCategory(request, slug):
 
 def diagnosesClassCategory(request, slug):
     if request.method == 'GET':
-        diagnoses_list = Diagnoses.objects.all().filter(classe__slug__icontains=slug)
+        diagnoses_list = Diagnoses.objects.all().filter(classe__slug__icontains=slug, accepted="Approved")
         diagnosis_first_one = diagnoses_list[0]
 
         context = {
@@ -87,14 +87,45 @@ def diagnosesCreate(request):
     }
 
     return render(request, 'diagnoses/diagnoses_create.html', context)
-
+@login_required
 def diagnosesPending(request):
-    result = Diagnoses.objects.filter(accepted=False)
-
-    if 'cancel' in request.POST:
-        print('Cancel')
+    result = Diagnoses.objects.filter(accepted="Pending")
 
     context = {
         'result': result
     }
     return render(request, 'diagnoses/diagnoses_pending.html', context)
+
+def diagnosesDelete(request, id):
+    diagnosis = Diagnoses.objects.get(id=id)
+    try:
+        diagnosis.delete()
+        return redirect('diagnoses-pending')
+    except:
+        pass
+
+def diagnosesApproved(request, id):
+    diagnosis = Diagnoses.objects.get(id=id)
+    try:
+        diagnosis.accepted = "Approved"
+        diagnosis.save()
+        return redirect('diagnoses-pending')
+    except:
+        pass
+
+def diagnosesEdit(request, id):
+    diagnosis = Diagnoses.objects.get(id=id)
+    form = DiagnosesForm(request.POST, instance=diagnosis)
+    if form.is_valid():
+        try:
+            form.save()
+            #messages.success(request, "Novo diagnóstico adicionado com sucesso!")
+            return redirect('diagnoses-list')
+        except:
+            pass
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'diagnoses/diagnoses_edit.html', context)
