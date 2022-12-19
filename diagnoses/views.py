@@ -76,8 +76,13 @@ def diagnosesCreate(request):
         form = DiagnosesForm(post)
         if form.is_valid():
             try:
-                form.save()
-                messages.success(request, "Novo diagnóstico adicionado com sucesso!")
+                obj = form.save(commit=False)
+                obj.author = request.user
+                obj.save()
+                if request.user.is_staff:
+                    messages.success(request, "Novo diagnóstico adicionado com sucesso!")
+                else:
+                    messages.success(request, "A sua publicação está sendo analisado pelo administrador... Muito Obrigado pela contribuição!")
                 return redirect('diagnoses-list')
             except:
                 pass
@@ -91,47 +96,65 @@ def diagnosesCreate(request):
     return render(request, 'diagnoses/diagnoses_create.html', context)
 @login_required
 def diagnosesPending(request):
-    result = Diagnoses.objects.filter(accepted="Pending")
+    if request.user.is_staff:
+        result = Diagnoses.objects.filter(accepted="Pending")
 
-    context = {
-        'result': result
-    }
-    return render(request, 'diagnoses/diagnoses_pending.html', context)
+        context = {
+            'result': result
+        }
+        return render(request, 'diagnoses/diagnoses_pending.html', context)
+    else:
+        return redirect('diagnoses-list')
 
+
+@login_required
 def diagnosesDelete(request, id):
-    diagnosis = Diagnoses.objects.get(id=id)
-    try:
-        diagnosis.delete()
-        return redirect('diagnoses-pending')
-    except:
-        pass
+    if request.user.is_staff:
+        diagnosis = Diagnoses.objects.get(id=id)
+        try:
+            diagnosis.delete()
+            return redirect('diagnoses-pending')
+        except:
+            pass
+
+    else:
+        return redirect('diagnoses-list')
 
 @login_required
 def diagnosesApproved(request, id):
-    diagnosis = Diagnoses.objects.get(id=id)
-    try:
-        diagnosis.accepted = "Approved"
-        diagnosis.save()
-        messages.success(request, "Diagnóstico aprovado com sucesso!")
+    if request.user.is_staff:
+        diagnosis = Diagnoses.objects.get(id=id)
+        try:
+            diagnosis.accepted = "Approved"
+            diagnosis.save()
+            messages.success(request, "Diagnóstico aprovado com sucesso!")
+            return redirect('diagnoses-list')
+        except:
+            pass
+
+    else:
         return redirect('diagnoses-list')
-    except:
-        pass
 
 @login_required
 def diagnosesUpdate(request, id):
-    diagnosis = Diagnoses.objects.get(id=id)
-    form = DiagnosesForm(request.POST or None, instance=diagnosis)
-    if form.is_valid():
-        try:
-            form.save()
-            messages.success(request, "Diagnóstico atualizado com sucesso!")
-            return redirect('diagnoses-list')
-        except:
-            messages.success(request, "Ocorreu um erro ao atualizar o diagnóstico")
-            return redirect('diagnoses-list')
+    if request.user.is_staff:
+        diagnosis = Diagnoses.objects.get(id=id)
+        form = DiagnosesForm(request.POST or None, instance=diagnosis)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, "Diagnóstico atualizado com sucesso!")
+                return redirect('diagnoses-list')
+            except:
+                messages.success(request, "Ocorreu um erro ao atualizar o diagnóstico")
+                return redirect('diagnoses-list')
 
-    context = {
-        'form': form
-    }
+        context = {
+            'form': form
+        }
 
-    return render(request, 'diagnoses/diagnoses_edit.html', context)
+        return render(request, 'diagnoses/diagnoses_edit.html', context)
+
+
+    else:
+        return redirect('diagnoses-list')

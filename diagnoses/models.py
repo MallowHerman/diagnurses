@@ -1,10 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 import uuid
 
 class Domains(models.Model):
-    name = models.CharField(max_length=300, unique=True)
-    slug = models.SlugField(null=True, blank=True, unique=True)
+    name = models.CharField(max_length=300)
+    slug = models.SlugField(null=True, blank=True)
     number = models.IntegerField(null=True)
     #id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True) 
@@ -18,8 +19,8 @@ class Domains(models.Model):
         return super().save(*args, **kwargs)
 
 class Classes(models.Model):
-    name = models.CharField(max_length=300, unique=True)
-    slug = models.SlugField(null=True, blank=True, unique=True)
+    name = models.CharField(max_length=300)
+    slug = models.SlugField(null=True, blank=True)
     number = models.IntegerField(null=True, blank=True)
     #id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True) 
@@ -34,9 +35,10 @@ class Classes(models.Model):
 
 class Diagnoses(models.Model):
     #id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
-    diagnosis = models.CharField(max_length=1000, unique=True)
-    diagnosis_code = models.CharField(max_length=300, null=True, unique=True)
-    slug = models.CharField(max_length=1000, null=True, blank=True, unique=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    diagnosis = models.CharField(max_length=1000)
+    diagnosis_code = models.CharField(max_length=300, null=True)
+    slug = models.CharField(max_length=1000, null=True, blank=True)
     definition = models.TextField(null=True)
     defining_characteristics = models.TextField(null=True, blank=True)
     related_factors = models.TextField(null=True, blank=True)

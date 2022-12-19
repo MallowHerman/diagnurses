@@ -25,7 +25,7 @@
             </ul>
             
         </div>
-    
+        
         <div>
             <h1 style="font-size: 24px;">Fatores Relacionados</h1>
             <ul>
@@ -34,7 +34,7 @@
                 {% endfor %}
             </ul>
         </div>
-    
+      
         <div>
             <h1 style="font-size: 24px;">Populações em risco</h1>
             <ul>
@@ -43,6 +43,7 @@
                 {% endfor %}
             </ul>
         </div>
+        
         <div>
             <h1 style="font-size: 24px;">Condições associados</h1>
             <ul>
@@ -69,8 +70,14 @@
         </div>
 
         {% if request.user.is_staff %}
+        <div>
+            <small>Publicado por: {{result.author}}</small>
+        </div>
+        {% endif %}
+
+        {% if request.user.is_staff %}
         <div class="d-flex border-top py-4 justify-content-end" style="gap: 5px;">
-            <a class="btn btn-danger" href="{% url 'diagnoses-update' result.id %}">Editar</a>
+            <a class="btn btn-warning" href="{% url 'diagnoses-update' result.id %}">Editar</a>
             <a class="btn btn-danger" href="{% url 'diagnoses-delete' result.id %}">Delete</a>
             <a class="btn btn-success" href="{% url 'diagnoses-approved' result.id %}">Accept</a>        
         </div>
