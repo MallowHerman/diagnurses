@@ -70,7 +70,7 @@
 
         {% if request.user.is_staff %}
         <div class="d-flex border-top py-4 justify-content-end" style="gap: 5px;">
-            <a class="btn btn-danger" href="{% url 'diagnoses-edit' result.id %}">Editar</a>
+            <a class="btn btn-danger" href="{% url 'diagnoses-update' result.id %}">Editar</a>
             <a class="btn btn-danger" href="{% url 'diagnoses-delete' result.id %}">Delete</a>
             <a class="btn btn-success" href="{% url 'diagnoses-approved' result.id %}">Accept</a>        
         </div>

@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['015b-165-90-98-236.eu.ngrok.io', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    #'jazzmin',
+    'jazzmin',
     'fontawesomefree',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -129,6 +129,7 @@ STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'diagnoses-list'
+LOGOUT_REDIRECT_URL = 'login'
 
 LOGIN_URL = 'login'
 

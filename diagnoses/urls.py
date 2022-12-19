@@ -11,6 +11,6 @@ urlpatterns = [
     path('diagnoses/pending', views.diagnosesPending, name='diagnoses-pending'),
     path('diagnoses/delete/<int:id>', views.diagnosesDelete, name='diagnoses-delete'),
     path('diagnoses/approved/<int:id>', views.diagnosesApproved, name='diagnoses-approved'),
-    path('diagnoses/edit/<int:id>', views.diagnosesEdit, name='diagnoses-edit'),
+    path('diagnoses/update/<int:id>', views.diagnosesUpdate, name='diagnoses-update'),
     
 ]

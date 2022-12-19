@@ -2,6 +2,7 @@
 {% block content %}
 <main class="">
     <div class="container py-4">
+        {% if result %}
         <h1>Domínio {{result.domain.number }}: {{result.domain.name}}</h1>
         {% for diagnosis in diagnoses_list %}
         <div class="d-flex my-3">
@@ -20,6 +21,10 @@
             </article>
         </div> 
         {% endfor%}
+
+        {% else %}
+        <h1>Sem resultados da pesquisa</h1>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -5,6 +5,7 @@ from .forms import DiagnosesForm
 from .models import Diagnoses
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 class DiagnosesListView(ListView):
     model: Diagnoses
@@ -48,7 +49,8 @@ def searchDiagnoses(request):
 def diagnosesDomainCategory(request, slug):
     if request.method == 'GET':
         diagnoses_list = Diagnoses.objects.all().filter(domain__slug__icontains=slug, accepted="Approved")
-        diagnosis_first_one = diagnoses_list[0]
+        diagnosis_first_one = diagnoses_list.first()
+
 
         context = {
             'result': diagnosis_first_one,
@@ -59,7 +61,7 @@ def diagnosesDomainCategory(request, slug):
 def diagnosesClassCategory(request, slug):
     if request.method == 'GET':
         diagnoses_list = Diagnoses.objects.all().filter(classe__slug__icontains=slug, accepted="Approved")
-        diagnosis_first_one = diagnoses_list[0]
+        diagnosis_first_one = diagnoses_list.first()
 
         context = {
             'result': diagnosis_first_one,
@@ -104,25 +106,29 @@ def diagnosesDelete(request, id):
     except:
         pass
 
+@login_required
 def diagnosesApproved(request, id):
     diagnosis = Diagnoses.objects.get(id=id)
     try:
         diagnosis.accepted = "Approved"
         diagnosis.save()
-        return redirect('diagnoses-pending')
+        messages.success(request, "Diagnóstico aprovado com sucesso!")
+        return redirect('diagnoses-list')
     except:
         pass
 
-def diagnosesEdit(request, id):
+@login_required
+def diagnosesUpdate(request, id):
     diagnosis = Diagnoses.objects.get(id=id)
-    form = DiagnosesForm(request.POST, instance=diagnosis)
+    form = DiagnosesForm(request.POST or None, instance=diagnosis)
     if form.is_valid():
         try:
             form.save()
-            #messages.success(request, "Novo diagnóstico adicionado com sucesso!")
+            messages.success(request, "Diagnóstico atualizado com sucesso!")
             return redirect('diagnoses-list')
         except:
-            pass
+            messages.success(request, "Ocorreu um erro ao atualizar o diagnóstico")
+            return redirect('diagnoses-list')
 
     context = {
         'form': form

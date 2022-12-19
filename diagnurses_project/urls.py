@@ -23,6 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('diagnoses.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name="login"),
-    path('logout/', auth_views.LogoutView.as_view(template_name='accounts/logout.html'), name="logout"),
+    path('logout/', accounts_views.logout_view, name="logout"),
     path('register/', accounts_views.register, name="register")
 ]
